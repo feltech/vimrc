@@ -47,6 +47,7 @@ filetype plugin indent on    " required
 let g:airline#extensions#tabline#enabled = 1
 " Show buffer number in tabline
 let g:airline#extensions#tabline#buffer_nr_show = 1
+let g:airline#parts#ffenc#skip_expected_string = 'utf-8[unix]'
 " Work around bug https://github.com/vim-airline/vim-airline/issues/399
 autocmd BufDelete * call airline#extensions#tabline#buflist#invalidate()
 " Save choice for warning that .lvimrc is being used
