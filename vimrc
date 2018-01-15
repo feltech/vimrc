@@ -36,6 +36,7 @@ Plugin 'ludovicchabant/vim-gutentags'
 Plugin 'ternjs/tern_for_vim'
 " Program structure
 Plugin 'majutsushi/tagbar'
+Plugin 'tpope/vim-fugitive'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -56,6 +57,8 @@ command Tree NERDTree
 "nmap <C-i> :NERDTreeFind<CR>
 " File tree show hidden files
 let NERDTreeShowHidden = 1
+let g:session_autosave = "yes"
+let g:session_autoload = 'yes'
 " Autoclose autocomplete when pressing ESC
 let g:ycm_autoclose_preview_window_after_insertion = 1
 " Shortcut: go to definition
