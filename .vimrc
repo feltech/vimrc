@@ -104,3 +104,5 @@ set listchars=eol:\ ,tab:»\ ,trail:~,extends:>,precedes:<
 hi SpecialKey ctermfg=00
 " Trim whitespace from all files on save
 autocmd BufWritePre * %s/\s\+$//e
+" Colour scheme (for colourblind)
+colorscheme evolution
