@@ -101,9 +101,11 @@ set shiftwidth=0
 set list
 " Set whitespace character
 set listchars=eol:\ ,tab:»\ ,trail:~,extends:>,precedes:<
-" Set whitespace character colour
-hi SpecialKey ctermfg=00
 " Trim whitespace from all files on save
 autocmd BufWritePre * %s/\s\+$//e
 " Colour scheme (for colourblind)
 colorscheme evolution
+" Set whitespace character colour
+hi SpecialKey ctermfg=00
+" Allow tabs in python and display them as 4, not 8, chars
+autocmd FileType python setlocal noexpandtab shiftwidth=0 softtabstop=4 tabstop=4
