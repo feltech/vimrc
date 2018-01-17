@@ -37,7 +37,11 @@ Plugin 'ternjs/tern_for_vim'
 " Program structure
 Plugin 'majutsushi/tagbar'
 Plugin 'tpope/vim-fugitive'
+" Extra keyboard shortcuts (e.g. ]q == :cnext)
+Plugin 'tpope/vim-unimpaired'
 
+" Work/home specific plugins
+source ~/.vim/plugins.vim
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -81,8 +85,14 @@ let g:ale_fixers = {
 \}
 " Fix linting errors on save
 let g:ale_fix_on_save = 1
+" Show git history
+command Ghist silent Glog -100 -- | cwindow
 
 " >>>>>>>>>> BEGIN BASE CONFIG
+" Close buffer and switch to previous
+command Bd bp|bd#
+" Colour scheme (for colourblind)
+colorscheme evolution
 " Enable line numbers
 set number
 " Enable mouse support
@@ -97,14 +107,16 @@ set scrolloff=5
 " Set tab width to 4 spaces
 set tabstop=4
 set shiftwidth=0
+" Show bar at 100 chars
+set textwidth=100
+set colorcolumn=100
+highlight ColorColumn ctermbg=darkgray guibg=darkgray
 " Show whitespace
 set list
 " Set whitespace character
 set listchars=eol:\ ,tab:»\ ,trail:~,extends:>,precedes:<
 " Trim whitespace from all files on save
 autocmd BufWritePre * %s/\s\+$//e
-" Colour scheme (for colourblind)
-colorscheme evolution
 " Set whitespace character colour
 hi SpecialKey ctermfg=00
 " Allow tabs in python and display them as 4, not 8, chars
