@@ -25,21 +25,21 @@ Plugin 'xolox/vim-session'
 Plugin 'airblade/vim-gitgutter'
 " Linting
 Plugin 'w0rp/ale'
-" Autocomplete
+" Autocomplete. NOTE requires building in bundle dir.
 Plugin 'Valloric/YouCompleteMe'
 " Javascript syntax highlighting
 Plugin 'pangloss/vim-javascript'
 " Auto generate CTags
 " Plugin 'xolox/vim-easytags'
 Plugin 'ludovicchabant/vim-gutentags'
-" Tern (javascript) integration
+" Tern (javascript) integration. NOTE requires `npm install` in bundle dir.
 Plugin 'ternjs/tern_for_vim'
 " Program structure
 Plugin 'majutsushi/tagbar'
+" Git integration
 Plugin 'tpope/vim-fugitive'
 " Extra keyboard shortcuts (e.g. ]q == :cnext)
 Plugin 'tpope/vim-unimpaired'
-
 " Work/home specific plugins
 source ~/.vim/plugins.vim
 " All of your Plugins must be added before the following line
@@ -66,6 +66,8 @@ let g:session_autosave = "yes"
 let g:session_autoload = 'yes'
 " Autoclose autocomplete when pressing ESC
 let g:ycm_autoclose_preview_window_after_insertion = 1
+" Autoload autocompletion config in project
+let g:ycm_confirm_extra_conf = 0
 " Shortcut: go to definition
 nnoremap <F2> :YcmCompleter GoTo<CR>
 " Shortcut: search by tag
@@ -89,7 +91,7 @@ let g:ale_fix_on_save = 1
 command Ghist silent Glog -100 -- | cwindow
 
 " >>>>>>>>>> BEGIN BASE CONFIG
-" Close buffer and switch to previous
+" Shortcut: close buffer and switch to previous
 command Bd bp|bd#
 " Colour scheme (for colourblind)
 colorscheme evolution
@@ -110,9 +112,9 @@ set shiftwidth=0
 " Show bar at 100 chars
 set textwidth=100
 set colorcolumn=100
+highlight ColorColumn ctermbg=darkgray guibg=darkgray
 " Highlight search results
 set hlsearch
-highlight ColorColumn ctermbg=darkgray guibg=darkgray
 " Show whitespace
 set list
 " Set whitespace character
