@@ -110,6 +110,8 @@ set shiftwidth=0
 " Show bar at 100 chars
 set textwidth=100
 set colorcolumn=100
+" Highlight search results
+set hlsearch
 highlight ColorColumn ctermbg=darkgray guibg=darkgray
 " Show whitespace
 set list
