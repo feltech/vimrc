@@ -151,3 +151,5 @@ set autoread
 set incsearch
 " Highlight the cursor line
 set cursorline
+" Mute the cursor line highlight colours
+hi CursorLine ctermbg=NONE ctermfg=NONE guibg=NONE guifg=NONE

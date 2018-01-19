@@ -1,3 +1,4 @@
 tags
 .gitignore
 .lvimrc
+.session.vim
