@@ -38,6 +38,8 @@ Plugin 'ternjs/tern_for_vim'
 Plugin 'majutsushi/tagbar'
 " Git integration
 Plugin 'tpope/vim-fugitive'
+" Git merge conflict shortcuts (:Conflicted, :GitNextConflict, dgu, dgl)
+Plugin 'christoomey/vim-conflicted'
 " Extra keyboard shortcuts (e.g. ]q == :cnext)
 Plugin 'tpope/vim-unimpaired'
 " Work/home specific plugins
@@ -64,6 +66,11 @@ command Tree NERDTree
 "nmap <C-i> :NERDTreeFind<CR>
 " File tree show hidden files
 let NERDTreeShowHidden = 1
+" Autoclose file browser when file selected
+let NERDTreeQuitOnOpen = 1
+" Shortcut: open file browser
+map <F9> :NERDTreeToggle<CR>
+" Auto load/save sessions
 let g:session_autosave = "yes"
 let g:session_autoload = 'yes'
 " Autoclose autocomplete when pressing ESC
@@ -73,7 +80,7 @@ let g:ycm_confirm_extra_conf = 0
 " Shortcut: go to definition
 nnoremap <F2> :YcmCompleter GoTo<CR>
 " Shortcut: search by tag
-nmap <leader>t :CtrlPBufTagAll<CR>
+nmap <leader>o :CtrlPBufTagAll<CR>
 " Fix the tag file searched for
 set tags=./tags,tags;/
 " Use Tern for js go to definition on click
@@ -89,8 +96,16 @@ let g:ale_fixers = {
 \}
 " Fix linting errors on save
 let g:ale_fix_on_save = 1
+" Shortcut: open tag sidebar
+map <F10> :Tagbar<CR>
+" Close tag sidebar when item selected
+let g:tagbar_autoclose = 1
+" Show diffs in vertical split rather than horizontal.
+set diffopt+=vertical
 " Show git history
 command Ghist silent Glog -100 -- | cwindow
+" Show git status in new tab
+command Gtabstatus Gtabedit :
 
 " >>>>>>>>>> BEGIN BASE CONFIG
 " Shortcut: close buffer and switch to previous
@@ -114,7 +129,6 @@ set shiftwidth=0
 " Intelligently switch between tabs and spaces for indentation
 set smarttab
 " Show bar at 100 chars
-set textwidth=100
 set colorcolumn=100
 highlight ColorColumn ctermbg=darkgray guibg=darkgray
 " Highlight search results
