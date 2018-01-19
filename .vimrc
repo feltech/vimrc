@@ -42,6 +42,8 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'christoomey/vim-conflicted'
 " Extra keyboard shortcuts (e.g. ]q == :cnext)
 Plugin 'tpope/vim-unimpaired'
+" More intelligent buffer closing (keeps layout)
+Plugin 'moll/vim-bbye'
 " Work/home specific plugins
 source ~/.vim/plugins.vim
 " All of your Plugins must be added before the following line
@@ -60,16 +62,10 @@ let g:airline_powerline_fonts=1
 autocmd BufDelete * call airline#extensions#tabline#buflist#invalidate()
 " Save choice for warning that .lvimrc is being used
 let g:localvimrc_persistent = 1
-" Shorter command to bring up file browser
-command Tree NERDTree
-" Locate currently selected file in file browser
-"nmap <C-i> :NERDTreeFind<CR>
 " File tree show hidden files
 let NERDTreeShowHidden = 1
 " Autoclose file browser when file selected
 let NERDTreeQuitOnOpen = 1
-" Shortcut: open file browser
-map <F9> :NERDTreeToggle<CR>
 " Auto load/save sessions
 let g:session_autosave = "yes"
 let g:session_autoload = 'yes'
@@ -77,14 +73,8 @@ let g:session_autoload = 'yes'
 let g:ycm_autoclose_preview_window_after_insertion = 1
 " Autoload autocompletion config in project
 let g:ycm_confirm_extra_conf = 0
-" Shortcut: go to definition
-nnoremap <F2> :YcmCompleter GoTo<CR>
-" Shortcut: search by tag
-nmap <leader>o :CtrlPBufTagAll<CR>
 " Fix the tag file searched for
 set tags=./tags,tags;/
-" Use Tern for js go to definition on click
-":nnoremap <buffer> <C-LeftMouse> <LeftMouse>:TernDef<CR>
 " Use global eslint (required since eslint breaks if project is in Dropbox
 " because Dropbox breaks symlinks)
 let g:ale_javascript_eslint_use_global = 1
@@ -96,8 +86,6 @@ let g:ale_fixers = {
 \}
 " Fix linting errors on save
 let g:ale_fix_on_save = 1
-" Shortcut: open tag sidebar
-map <F10> :Tagbar<CR>
 " Close tag sidebar when item selected
 let g:tagbar_autoclose = 1
 " Show diffs in vertical split rather than horizontal.
@@ -106,10 +94,26 @@ set diffopt+=vertical
 command Ghist silent Glog -100 -- | cwindow
 " Show git status in new tab
 command Gtabstatus Gtabedit :
+" Shortcut: close buffer and switch to previous
+command Bd Bdelete
+" Shorter command to bring up file browser
+command Tree NERDTree
+" Shortcut: open tag sidebar
+map <F10> :Tagbar<CR>
+" Use Tern for js go to definition on click
+":nnoremap <buffer> <C-LeftMouse> <LeftMouse>:TernDef<CR>
+" Shortcut: open file browser
+map <F9> :NERDTreeToggle<CR>
+" Shortcut: search tags in current buffer
+nmap <leader>o :CtrlPBufTag<CR>
+" Shortcut: search all tags in project
+nmap <leader>ta :CtrlPTag<CR>
+" Shortcut: search tags in all open files
+nmap <leader>tb :CtrlPBufTagAll<CR>
+" Shortcut: go to definition
+nnoremap <F2> :YcmCompleter GoTo<CR>
 
 " >>>>>>>>>> BEGIN BASE CONFIG
-" Shortcut: close buffer and switch to previous
-command Bd bp|bd#
 " Colour scheme (for colourblind)
 colorscheme evolution
 " Enable line numbers
@@ -140,7 +144,7 @@ set listchars=eol:\ ,tab:»\ ,trail:~,extends:>,precedes:<
 " Trim whitespace from all files on save
 autocmd BufWritePre * %s/\s\+$//e
 " Set whitespace character colour
-hi SpecialKey ctermfg=00
+hi SpecialKey ctermfg=238
 " Allow tabs in python and display them as 4, not 8, chars
 autocmd FileType python setlocal noexpandtab shiftwidth=0 softtabstop=4 tabstop=4
 " Show file text on final line instead of '@'
