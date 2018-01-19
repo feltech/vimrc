@@ -52,6 +52,8 @@ let g:airline#extensions#tabline#enabled = 1
 " Show buffer number in tabline
 let g:airline#extensions#tabline#buffer_nr_show = 1
 let g:airline#parts#ffenc#skip_expected_string = 'utf-8[unix]'
+" Enable icons.
+let g:airline_powerline_fonts=1
 " Work around bug https://github.com/vim-airline/vim-airline/issues/399
 autocmd BufDelete * call airline#extensions#tabline#buflist#invalidate()
 " Save choice for warning that .lvimrc is being used
@@ -109,6 +111,8 @@ set scrolloff=5
 " Set tab width to 4 spaces
 set tabstop=4
 set shiftwidth=0
+" Intelligently switch between tabs and spaces for indentation
+set smarttab
 " Show bar at 100 chars
 set textwidth=100
 set colorcolumn=100
@@ -125,3 +129,11 @@ autocmd BufWritePre * %s/\s\+$//e
 hi SpecialKey ctermfg=00
 " Allow tabs in python and display them as 4, not 8, chars
 autocmd FileType python setlocal noexpandtab shiftwidth=0 softtabstop=4 tabstop=4
+" Show file text on final line instead of '@'
+set display+=lastline
+" Set to auto read when a file is changed from the outside
+set autoread
+" Jump to search results whilst typing search
+set incsearch
+" Highlight the cursor line
+set cursorline
