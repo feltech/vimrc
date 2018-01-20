@@ -44,6 +44,8 @@ Plugin 'christoomey/vim-conflicted'
 Plugin 'tpope/vim-unimpaired'
 " More intelligent buffer closing (keeps layout)
 Plugin 'moll/vim-bbye'
+" Enable use of vim 8 aync running of commands
+Plugin 'skywind3000/asyncrun.vim'
 " Work/home specific plugins
 source ~/.vim/plugins.vim
 " All of your Plugins must be added before the following line
@@ -73,6 +75,8 @@ let g:session_autoload = 'yes'
 let g:ycm_autoclose_preview_window_after_insertion = 1
 " Autoload autocompletion config in project
 let g:ycm_confirm_extra_conf = 0
+" Have autocomplete also use ctags
+let g:ycm_collect_identifiers_from_tags_files = 1
 " Fix the tag file searched for
 set tags=./tags,tags;/
 " Use global eslint (required since eslint breaks if project is in Dropbox
@@ -80,6 +84,8 @@ set tags=./tags,tags;/
 let g:ale_javascript_eslint_use_global = 1
 " Integrate linter with status bar
 let g:airline#extensions#ale#enabled = 1
+" Tolerate block comments with space after tab, i.e /** -style.
+let g:airline#extensions#whitespace#mixed_indent_algo = 1
 " Tell ALEFix command to use eslint
 let g:ale_fixers = {
 \   'javascript': ['eslint'],
@@ -117,7 +123,13 @@ nnoremap <F2> :YcmCompleter GoTo<CR>
 " Colour scheme (for colourblind)
 colorscheme evolution
 " Enable line numbers
-set number
+set number relativenumber
+" Toggle relative numbering off when it doesn't make sense.
+augroup numbertoggle
+  autocmd!
+  autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
+  autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
+augroup END
 " Enable mouse support
 set mouse=a
 " Save files when switching between buffers, amongst others (required to prevent ctrlp from
@@ -139,8 +151,14 @@ highlight ColorColumn ctermbg=darkgray guibg=darkgray
 set hlsearch
 " Show whitespace
 set list
+" Recursively search using e.g. `find`
+set path+=**
+" Show all matching files when tab completing
+set wildmenu
 " Set whitespace character
 set listchars=eol:\ ,tab:»\ ,trail:~,extends:>,precedes:<
+" Enable built-in autocomplete
+set omnifunc=syntaxcomplete#Complete
 " Trim whitespace from all files on save
 autocmd BufWritePre * %s/\s\+$//e
 " Set whitespace character colour
