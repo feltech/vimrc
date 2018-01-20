@@ -175,3 +175,8 @@ set incsearch
 set cursorline
 " Mute the cursor line highlight colours
 hi CursorLine ctermbg=NONE ctermfg=NONE guibg=NONE guifg=NONE
+" Enable folding by indent (for navigation between blocks)
+set foldmethod=syntax
+set foldlevelstart=99
+" Better matching parens highlight for colourblind eyes
+hi MatchParen cterm=bold ctermbg=none ctermfg=green
