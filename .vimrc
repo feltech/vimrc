@@ -46,6 +46,9 @@ Plugin 'tpope/vim-unimpaired'
 Plugin 'moll/vim-bbye'
 " Enable use of vim 8 aync running of commands
 Plugin 'skywind3000/asyncrun.vim'
+" Shortcuts to add surrouding quotes, brackets, etc
+Plugin 'tpope/vim-surround'
+
 " Work/home specific plugins
 source ~/.vim/plugins.vim
 " All of your Plugins must be added before the following line
@@ -53,6 +56,8 @@ call vundle#end()            " required
 filetype plugin indent on    " required
 
 " >>>>>>>>>> BEGIN PLUGIN CONFIG
+" Enable syntax highlighting
+syntax enable
 " Add tabline (buffers as tabs on top)
 let g:airline#extensions#tabline#enabled = 1
 " Show buffer number in tabline
@@ -68,6 +73,10 @@ let g:localvimrc_persistent = 1
 let NERDTreeShowHidden = 1
 " Autoclose file browser when file selected
 let NERDTreeQuitOnOpen = 1
+" Set session file to a hidden file
+let g:session_default_name = '.session'
+" Set session file directory to working directory.
+let g:session_directory = getcwd()
 " Auto load/save sessions
 let g:session_autosave = "yes"
 let g:session_autoload = 'yes'
@@ -79,6 +88,8 @@ let g:ycm_confirm_extra_conf = 0
 let g:ycm_collect_identifiers_from_tags_files = 1
 " Fix the tag file searched for
 set tags=./tags,tags;/
+" Add cscope module to auto tag generation
+"let g:gutentags_modules = ['ctags', 'cscope']
 " Use global eslint (required since eslint breaks if project is in Dropbox
 " because Dropbox breaks symlinks)
 let g:ale_javascript_eslint_use_global = 1
@@ -99,7 +110,7 @@ set diffopt+=vertical
 " Show git history
 command Ghist silent Glog -100 -- | cwindow
 " Show git status in new tab
-command Gtabstatus Gtabedit :
+command Gtabstatus tab split | Gstatus | wincmd o
 " Shortcut: close buffer and switch to previous
 command Bd Bdelete
 " Shorter command to bring up file browser
@@ -122,6 +133,8 @@ nnoremap <F2> :YcmCompleter GoTo<CR>
 " >>>>>>>>>> BEGIN BASE CONFIG
 " Colour scheme (for colourblind)
 colorscheme evolution
+" Keep command history
+set history=1000
 " Enable line numbers
 set number relativenumber
 " Toggle relative numbering off when it doesn't make sense.
@@ -134,7 +147,7 @@ augroup END
 set mouse=a
 " Save files when switching between buffers, amongst others (required to prevent ctrlp from
 " opening in a new pane for unsaved files).
-set autowrite
+set autowriteall
 " Open new vertical splits to the right
 set splitright
 " Keep a few lines above/below cursor when moving through file
@@ -163,8 +176,11 @@ set omnifunc=syntaxcomplete#Complete
 autocmd BufWritePre * %s/\s\+$//e
 " Set whitespace character colour
 hi SpecialKey ctermfg=238
-" Allow tabs in python and display them as 4, not 8, chars
-autocmd FileType python setlocal noexpandtab shiftwidth=0 softtabstop=4 tabstop=4
+augroup pythonindent
+  autocmd!
+  " Allow tabs in python and display them as 4, not 8, chars
+  autocmd FileType python setlocal noexpandtab shiftwidth=0 softtabstop=4 tabstop=4
+augroup END
 " Show file text on final line instead of '@'
 set display+=lastline
 " Set to auto read when a file is changed from the outside
