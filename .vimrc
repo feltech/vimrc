@@ -89,7 +89,9 @@ let g:ycm_collect_identifiers_from_tags_files = 1
 " Fix the tag file searched for
 set tags=./tags,tags;/
 " Add cscope module to auto tag generation
-"let g:gutentags_modules = ['ctags', 'cscope']
+let g:gutentags_modules = ['gtags_cscope']
+" Enable trace logging for gutentags
+"let g:gutentags_trace = 1
 " Use global eslint (required since eslint breaks if project is in Dropbox
 " because Dropbox breaks symlinks)
 let g:ale_javascript_eslint_use_global = 1
@@ -196,3 +198,32 @@ set foldmethod=syntax
 set foldlevelstart=99
 " Better matching parens highlight for colourblind eyes
 hi MatchParen cterm=bold ctermbg=none ctermfg=green
+" Use GNU Global for search by definition
+set csprg=gtags-cscope
+" Use both cscope and ctag for 'ctrl-]', ':ta', and 'vim -t'
+set cscopetag
+" Check cscope for definition of a symbol before checking ctags.
+set csto=0
+if filereadable("GTAGS")
+	cs add GTAGS
+" else add the database pointed to by environment variable
+elseif $CSCOPE_DB != ""
+	cs add $CSCOPE_DB
+endif
+" show msg when any other cscope db added
+set cscopeverbose
+" Shortcut: keybindings for cscope
+nmap <leader>ts :cs find s <C-R>=expand("<cword>")<CR><CR> \| :copen<CR>
+nmap <leader>tg :cs find g <C-R>=expand("<cword>")<CR><CR>
+nmap <leader>tj :cs find c <C-R>=expand("<cword>")<CR><CR>
+nmap <leader>tt :cs find t <C-R>=expand("<cword>")<CR><CR>
+nmap <leader>te :cs find e <C-R>=expand("<cword>")<CR><CR>
+nmap <leader>tf :cs find f <C-R>=expand("<cfile>")<CR><CR>
+nmap <leader>ti :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+nmap <leader>td :cs find d <C-R>=expand("<cword>")<CR><CR>
+" Use quickfix window for cscope results. Clear previous results before the search.
+set cscopequickfix=g-,s-,c-,f-,i-,t-,d-,e-
+" Shortcut: insert a single character (rather than replace as with 'r')
+nmap <silent> <space> "=nr2char(getchar())<cr>P
+" Shortcut: grep recursively
+command -nargs=1 Grep silent execute "grep -Er <args> *" | redraw! | copen
