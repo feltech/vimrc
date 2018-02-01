@@ -48,6 +48,9 @@ Plugin 'moll/vim-bbye'
 Plugin 'skywind3000/asyncrun.vim'
 " Shortcuts to add surrouding quotes, brackets, etc
 Plugin 'tpope/vim-surround'
+" Snippet support
+Plugin 'SirVer/ultisnips'
+
 " Work/home specific plugins
 source ~/.vim/plugins.vim
 " All of your Plugins must be added before the following line
@@ -85,6 +88,8 @@ let g:ycm_autoclose_preview_window_after_insertion = 1
 let g:ycm_confirm_extra_conf = 0
 " Have autocomplete also use ctags
 let g:ycm_collect_identifiers_from_tags_files = 1
+" Disable YCM's diagnostics - ALE will do that instead
+let g:ycm_show_diagnostics_ui = 0
 " Fix the tag file searched for
 set tags=./tags,tags;/
 " Add cscope module to auto tag generation
@@ -108,6 +113,10 @@ let g:ale_fix_on_save = 1
 let g:tagbar_autoclose = 1
 " Show diffs in vertical split rather than horizontal.
 set diffopt+=vertical
+" Set snippets save directory for :UltiSnipEdit (must be somewhere on search  path)
+let g:UltiSnipsSnippetsDir = '~/.vim/UltiSnips'
+" Set snippet expansion trigger (conflicts with YouCompleteMe otherwise)
+let g:UltiSnipsExpandTrigger = "<c-j>"
 " Show git history
 command Ghist silent Glog -100 -- | cwindow
 " Show git status in new tab
@@ -172,7 +181,7 @@ set wildmenu
 " Set whitespace character
 set listchars=eol:\ ,tab:»\ ,trail:~,extends:>,precedes:<
 " Enable built-in autocomplete
-set omnifunc=syntaxcomplete#Complete
+"set omnifunc=syntaxcomplete#Complete
 " Trim whitespace from all files on save
 autocmd BufWritePre * %s/\s\+$//e
 " Set whitespace character colour
