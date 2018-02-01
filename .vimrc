@@ -48,7 +48,6 @@ Plugin 'moll/vim-bbye'
 Plugin 'skywind3000/asyncrun.vim'
 " Shortcuts to add surrouding quotes, brackets, etc
 Plugin 'tpope/vim-surround'
-
 " Work/home specific plugins
 source ~/.vim/plugins.vim
 " All of your Plugins must be added before the following line
@@ -214,8 +213,8 @@ endif
 set cscopeverbose
 " Shortcut: keybindings for cscope
 nmap <leader>ts :cs find s <C-R>=expand("<cword>")<CR><CR> \| :copen<CR>
-nmap <leader>tg :cs find g <C-R>=expand("<cword>")<CR><CR>
-nmap <leader>tj :cs find c <C-R>=expand("<cword>")<CR><CR>
+nmap <leader>tj :cs find g <C-R>=expand("<cword>")<CR><CR>
+nmap <leader>tc :cs find c <C-R>=expand("<cword>")<CR><CR>
 nmap <leader>tt :cs find t <C-R>=expand("<cword>")<CR><CR>
 nmap <leader>te :cs find e <C-R>=expand("<cword>")<CR><CR>
 nmap <leader>tf :cs find f <C-R>=expand("<cfile>")<CR><CR>
@@ -226,4 +225,18 @@ set cscopequickfix=g-,s-,c-,f-,i-,t-,d-,e-
 " Shortcut: insert a single character (rather than replace as with 'r')
 nmap <silent> <space> "=nr2char(getchar())<cr>P
 " Shortcut: grep recursively
-command -nargs=1 Grep silent execute "grep -Er <args> *" | redraw! | copen
+command -nargs=1 Grep silent execute 'grep -Er <args> *' | redraw! | copen
+" Close buffers not open in any window (https://stackoverflow.com/a/30101152/535103)
+function! DeleteHiddenBuffers()
+  let tpbl=[]
+  let closed = 0
+  call map(range(1, tabpagenr('$')), 'extend(tpbl, tabpagebuflist(v:val))')
+  for buf in filter(range(1, bufnr('$')), 'bufexists(v:val) && index(tpbl, v:val)==-1')
+    if getbufvar(buf, '&mod') == 0
+      silent execute 'bwipeout' buf
+      let closed += 1
+    endif
+  endfor
+  echo "Closed ".closed." hidden buffers"
+endfunction
+command Bdh call DeleteHiddenBuffers()
