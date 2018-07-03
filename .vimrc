@@ -50,7 +50,10 @@ Plugin 'skywind3000/asyncrun.vim'
 Plugin 'tpope/vim-surround'
 " Snippet support
 Plugin 'SirVer/ultisnips'
-
+" Test runners
+Plugin 'janko-m/vim-test'
+" Python virtualenv support
+Plugin 'plytophogy/vim-virtualenv'
 " Work/home specific plugins
 source ~/.vim/plugins.vim
 " All of your Plugins must be added before the following line
@@ -139,7 +142,10 @@ nmap <leader>ta :CtrlPTag<CR>
 nmap <leader>tb :CtrlPBufTagAll<CR>
 " Shortcut: go to definition
 nnoremap <F2> :YcmCompleter GoTo<CR>
-
+" Use nosetests as the python test runner.
+let test#python#runner = 'nose'
+" Make test commands execute using async support in vim 8.
+let test#strategy = "asyncrun"
 " >>>>>>>>>> BEGIN BASE CONFIG
 " Colour scheme (for colourblind)
 colorscheme evolution
@@ -164,7 +170,7 @@ set splitright
 set scrolloff=5
 " Set tab width to 4 spaces
 set tabstop=4
-set shiftwidth=0
+set shiftwidth=4
 " Intelligently switch between tabs and spaces for indentation
 set smarttab
 " Show bar at 100 chars
@@ -189,7 +195,7 @@ hi SpecialKey ctermfg=238
 augroup pythonindent
   autocmd!
   " Allow tabs in python and display them as 4, not 8, chars
-  autocmd FileType python setlocal noexpandtab shiftwidth=0 softtabstop=4 tabstop=4
+  autocmd FileType python setlocal noexpandtab shiftwidth=4 softtabstop=4 tabstop=4
 augroup END
 " Show file text on final line instead of '@'
 set display+=lastline
@@ -221,7 +227,7 @@ endif
 " show msg when any other cscope db added
 set cscopeverbose
 " Shortcut: keybindings for cscope
-nmap <leader>ts :cs find s <C-R>=expand("<cword>")<CR><CR> \| :copen<CR>
+nmap <leader>ts :cs find s <C-R>=expand("<cword>")<CR><CR>
 nmap <leader>tj :cs find g <C-R>=expand("<cword>")<CR><CR>
 nmap <leader>tc :cs find c <C-R>=expand("<cword>")<CR><CR>
 nmap <leader>tt :cs find t <C-R>=expand("<cword>")<CR><CR>
@@ -233,6 +239,12 @@ nmap <leader>td :cs find d <C-R>=expand("<cword>")<CR><CR>
 set cscopequickfix=g-,s-,c-,f-,i-,t-,d-,e-
 " Shortcut: insert a single character (rather than replace as with 'r')
 nmap <silent> <space> "=nr2char(getchar())<cr>P
+" Shortcut: binding for vim-test
+nmap <silent> tn :TestNearest<CR>
+nmap <silent> tf :TestFile<CR>
+nmap <silent> ts :TestSuite<CR>
+nmap <silent> tl :TestLast<CR>
+nmap <silent> tg :TestVisit<CR>
 " Shortcut: grep recursively
 command -nargs=1 Grep silent execute 'grep -Er <args> *' | redraw! | copen
 " Close buffers not open in any window (https://stackoverflow.com/a/30101152/535103)
