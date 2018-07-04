@@ -2,3 +2,5 @@ tags
 .gitignore
 .lvimrc
 .session.vim
+/.project
+/tags.log
