@@ -123,6 +123,10 @@ Plugin 'tpope/vim-surround'
 Plugin 'SirVer/ultisnips'
 " Doxygen support via `Dox` command
 Plugin 'vim-scripts/DoxygenToolkit.vim'
+" Test runners
+Plugin 'janko-m/vim-test'
+" Python virtualenv support
+Plugin 'plytophogy/vim-virtualenv'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -150,7 +154,10 @@ nmap <leader>o :CtrlPBufTag<CR>
 nmap <leader>tb :CtrlPBufTagAll<CR>
 " Shortcut: go to definition
 nnoremap <F2> :YcmCompleter GoTo<CR>
-
+" Use nosetests as the python test runner.
+let test#python#runner = 'nose'
+" Make test commands execute using async support in vim 8.
+let test#strategy = "asyncrun"
 " >>>>>>>>>> BEGIN BASE CONFIG
 " Enable syntax highlighting
 syntax enable
@@ -204,7 +211,7 @@ hi SpecialKey ctermfg=238
 augroup pythonindent
   autocmd!
   " Allow tabs in python and display them as 4, not 8, chars
-  autocmd FileType python setlocal noexpandtab shiftwidth=0 softtabstop=4 tabstop=4
+  autocmd FileType python setlocal noexpandtab shiftwidth=4 softtabstop=4 tabstop=4
 augroup END
 " Show file text on final line instead of '@'
 set display+=lastline
@@ -258,6 +265,12 @@ augroup END
 set cscopequickfix=g-,s-,c-,f-,i-,t-,d-,e-
 " Shortcut: insert a single character (rather than replace as with 'r')
 nmap <silent> <space> "=nr2char(getchar())<cr>P
+" Shortcut: binding for vim-test
+nmap <silent> tn :TestNearest<CR>
+nmap <silent> tf :TestFile<CR>
+nmap <silent> ts :TestSuite<CR>
+nmap <silent> tl :TestLast<CR>
+nmap <silent> tg :TestVisit<CR>
 " Shortcut: grep recursively
 command -nargs=1 Grep silent execute 'grep -Er <args> *' | redraw! | copen
 
