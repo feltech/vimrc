@@ -29,9 +29,10 @@ let g:ycm_collect_identifiers_from_tags_files = 1
 let g:ycm_show_diagnostics_ui = 0
 let g:ycm_enable_diagnostic_signs = 0
 let g:ycm_enable_diagnostic_highlighting = 0
-" Disable semantic completion for cpp - will automatically use RTags omnifunc instead.
+" Disable YCM semantic completion in favour of omnifunc instead.
+" TODO: this completely disables semantic completion, including omnifunc completion, annoyingly.
 "let g:ycm_filetype_specific_completion_to_disable = {
-"\ 'cpp': 1, 'c': 1
+"\ 'cpp': 1, 'c': 1, 'javascript': 1, 'python': 1
 "\}
 " Fix the tag file searched for
 set tags=./tags,tags;/
@@ -70,7 +71,11 @@ let g:UltiSnipsExpandTrigger = "<c-j>"
 let g:cpp_class_member_highlight = 1
 " Disable @brief in Doxygen generator
 let g:DoxygenToolkit_briefTag_pre = ""
-
+" Configure language servers
+let g:LanguageClient_serverCommands = {
+    \ 'javascript': ['javascript-typescript-stdio'],
+    \ 'python': ['pyls']
+	\}
 " >>>>>>>>>> BEGIN VUNDLE CONFIG
 set nocompatible              " be iMproved, required
 filetype off                  " required
@@ -127,11 +132,16 @@ Plugin 'vim-scripts/DoxygenToolkit.vim'
 Plugin 'janko-m/vim-test'
 " Python virtualenv support
 Plugin 'plytophogy/vim-virtualenv'
+" Langauge Server Protocol support
+Plugin 'autozimu/LanguageClient-neovim'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
 
 " >>>>>>>>>> BEGIN PLUGIN CUSTOMISATIONS
+" Required for operations modifying multiple buffers like rename.
+set hidden
+set signcolumn=yes
 " Work around bug https://github.com/vim-airline/vim-airline/issues/399
 autocmd BufDelete * call airline#extensions#tabline#buflist#invalidate()
 " Show git history
@@ -158,6 +168,7 @@ nnoremap <F2> :YcmCompleter GoTo<CR>
 let test#python#runner = 'nose'
 " Make test commands execute using async support in vim 8.
 let test#strategy = "asyncrun"
+
 " >>>>>>>>>> BEGIN BASE CONFIG
 " Enable syntax highlighting
 syntax enable
@@ -244,6 +255,8 @@ elseif $CSCOPE_DB != ""
 endif
 " show msg when any other cscope db added
 set cscopeverbose
+" Use quickfix window for cscope results. Clear previous results before the search.
+set cscopequickfix=g-,s-,c-,f-,i-,t-,d-,e-
 " Shortcut: keybindings for cscope
 nmap <leader>ts :cs find s <C-R>=expand("<cword>")<CR><CR>:copen<CR>
 nmap <leader>tj :cs find g <C-R>=expand("<cword>")<CR><CR>
@@ -253,16 +266,15 @@ nmap <leader>te :cs find e <C-R>=expand("<cword>")<CR><CR>
 nmap <leader>tf :cs find f <C-R>=expand("<cfile>")<CR><CR>
 nmap <leader>ti :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
 nmap <leader>td :cs find d <C-R>=expand("<cword>")<CR><CR>
-" Shortcut: keybindings for javaascript (tern)
-augroup javascript
-	autocmd!
-	autocmd FileType javascript nnoremap <buffer> <Leader>rj :TernDef<CR>
-	autocmd FileType javascript nnoremap <buffer> <Leader>rJ :TernType<CR>
-	autocmd FileType javascript nnoremap <buffer> <Leader>rs :TernRefs<CR>
-	autocmd FileType javascript nnoremap <buffer> <Leader>rw :TernRename<CR>
+" Shortcut: keybindings for language server
+augroup languageserver
+	autocmd! * <buffer>
+	autocmd FileType javascript,python nnoremap <buffer> <silent> <Leader>rj :call LanguageClient#textDocument_definition()<CR>
+	autocmd FileType javascript,python nnoremap <buffer> <silent> <Leader>rJ :call LanguageClient#textDocument_typeDefinition()<CR>
+	autocmd FileType javascript,python nnoremap <buffer> <silent> <Leader>rs :call LanguageClient#textDocument_references()<CR>
+	autocmd FileType javascript,python nnoremap <buffer> <silent> <Leader>rw :call LanguageClient#textDocument_rename()<CR>
+	autocmd FileType javascript,python setlocal omnifunc=LanguageClient#textDocument_completion()
 augroup END
-" Use quickfix window for cscope results. Clear previous results before the search.
-set cscopequickfix=g-,s-,c-,f-,i-,t-,d-,e-
 " Shortcut: insert a single character (rather than replace as with 'r')
 nmap <silent> <space> "=nr2char(getchar())<cr>P
 " Shortcut: binding for vim-test
@@ -275,6 +287,13 @@ nmap <silent> tg :TestVisit<CR>
 command -nargs=1 Grep silent execute 'grep -Er <args> *' | redraw! | copen
 
 " >>>>>>>>>> BEGIN CUSTOM FUNCTIONS
+function! LSFindSymbol()
+	call inputsave()
+	let name = input('Find symbol in workspace: ')
+	call inputrestore()
+	call LanguageClient#workspace_symbol(name)
+endfunction
+nmap <leader>ra :call LSFindSymbol()<CR>
 " Close buffers not open in any window (https://stackoverflow.com/a/30101152/535103)
 function! DeleteHiddenBuffers()
   let tpbl=[]
